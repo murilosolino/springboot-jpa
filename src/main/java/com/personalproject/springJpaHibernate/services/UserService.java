@@ -2,6 +2,7 @@ package com.personalproject.springJpaHibernate.services;
 
 import com.personalproject.springJpaHibernate.entities.User;
 import com.personalproject.springJpaHibernate.repositories.UserRepository;
+import com.personalproject.springJpaHibernate.services.exceptions.ResourceNotFundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class UserService{
 
     public User findById(Long Id){
         Optional<User> obj = repository.findById(Id);
-        return obj.get();
+        return obj.orElseThrow(() -> new ResourceNotFundException(Id));
     }
 
     public User insert(User obj){
