@@ -1,6 +1,7 @@
 package com.personalproject.springJpaHibernate.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.personalproject.springJpaHibernate.entities.enums.OrderStatus;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -24,12 +25,33 @@ public class Order implements Serializable {
     @JoinColumn(name = "client_id")
     private User client;
 
+    private Integer orderStatus;
+
     public Order(){}
 
-    public Order(Long id, Instant moment, User client) {
+    public Order(Long id, Instant moment, User client, OrderStatus orderStatus) {
         this.id = id;
         this.moment = moment;
         this.client = client;
+        setOrderStatus(orderStatus);
+    }
+
+    public User getClient() {
+        return client;
+    }
+
+    public void setClient(User client) {
+        this.client = client;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return OrderStatus.valueOf(orderStatus) ;
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        if (orderStatus != null){
+            this.orderStatus = orderStatus.getCode();
+        }
     }
 
     public Instant getMoment() {
@@ -46,14 +68,6 @@ public class Order implements Serializable {
 
     public Long getId() {
         return id;
-    }
-
-    public User getUser() {
-        return client;
-    }
-
-    public void setUser(User client) {
-        this.client = client;
     }
 
     @Override
