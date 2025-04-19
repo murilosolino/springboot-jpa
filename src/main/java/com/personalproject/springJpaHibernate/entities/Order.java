@@ -102,4 +102,12 @@ public class Order implements Serializable {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
+    public double getTotal(){
+        double total =0;
+        for (OrderItem oi : items){
+            total += oi.getSubTotal();
+        }
+        return total;
+    }
 }
