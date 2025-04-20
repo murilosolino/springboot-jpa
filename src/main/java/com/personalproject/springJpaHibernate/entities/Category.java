@@ -2,6 +2,7 @@ package com.personalproject.springJpaHibernate.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -19,12 +20,12 @@ public class Category implements Serializable {
     private Long Id;
     private String name;
 
-
     @JsonIgnore
     @ManyToMany(mappedBy = "categories")
     private Set<Product> products = new HashSet<>();
 
     public Category(){}
+
 
     public Category(Long id, String name) {
         Id = id;
