@@ -19,8 +19,6 @@ public class UserResource {
 
     @Autowired
     private UserService service;
-    @Autowired
-    private UserRepository userRepository;
 
     @GetMapping
     public ResponseEntity<List> findAll(){
