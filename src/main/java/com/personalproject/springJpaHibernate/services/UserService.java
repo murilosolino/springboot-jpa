@@ -3,6 +3,7 @@ package com.personalproject.springJpaHibernate.services;
 import com.personalproject.springJpaHibernate.entities.User;
 import com.personalproject.springJpaHibernate.repositories.UserRepository;
 import com.personalproject.springJpaHibernate.services.exceptions.DataBaseException;
+import com.personalproject.springJpaHibernate.services.exceptions.NullDataObjectException;
 import com.personalproject.springJpaHibernate.services.exceptions.ResourceNotFundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class UserService{
     }
 
     public User insert(User obj){
+        validateDataObject(obj);
         return repository.save(obj);
     }
 
@@ -49,6 +51,7 @@ public class UserService{
         try{
             User entity = repository.getReferenceById(id);
             updateData(entity, obj);
+            validateDataObject(entity);
             return repository.save(entity);
         }catch (EntityNotFoundException e){
             throw new ResourceNotFundException(id);
@@ -59,6 +62,18 @@ public class UserService{
         entity.setName(obj.getName());
         entity.setEmail(obj.getEmail());
         entity.setPhone(obj.getPhone());
+    }
+
+    private void validateDataObject(User user){
+        if (user.getName() == null) {
+            throw new NullDataObjectException("NAME CANNOT BE NULL");
+        } else if (user.getEmail() == null){
+            throw new NullDataObjectException("EMAIL CANNOT BE NULL");
+        } else if (user.getPhone() == null) {
+            throw new NullDataObjectException("PHONE CANNOT BE NULL");
+        } else if (user.getPassword() == null){
+            throw new NullDataObjectException("PASSWORD CANNOT BE NULL");
+        }
     }
 
 }
