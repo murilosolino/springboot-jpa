@@ -1,7 +1,9 @@
 package com.personalproject.springJpaHibernate.resources;
 
 import com.personalproject.springJpaHibernate.entities.User;
+import com.personalproject.springJpaHibernate.repositories.UserRepository;
 import com.personalproject.springJpaHibernate.services.UserService;
+import com.personalproject.springJpaHibernate.services.exceptions.ResourceNotFundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +11,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -16,6 +19,8 @@ public class UserResource {
 
     @Autowired
     private UserService service;
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping
     public ResponseEntity<List> findAll(){
@@ -39,8 +44,14 @@ public class UserResource {
 
     @DeleteMapping(value = "/{Id}")
     public ResponseEntity<Void> delete(@PathVariable Long Id){
-        service.delete(Id);
-        return ResponseEntity.noContent().build();
+        Optional<User> obj = userRepository.findById(Id);
+        if (obj.isPresent()){
+            service.delete(Id);
+            return ResponseEntity.noContent().build();
+        } else {
+            throw new ResourceNotFundException(Id);
+        }
+
     }
 
     @PutMapping(value = "/{Id}")

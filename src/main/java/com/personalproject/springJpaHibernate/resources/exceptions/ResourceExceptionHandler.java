@@ -1,5 +1,6 @@
 package com.personalproject.springJpaHibernate.resources.exceptions;
 
+import com.personalproject.springJpaHibernate.services.exceptions.DataBaseException;
 import com.personalproject.springJpaHibernate.services.exceptions.ResourceNotFundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,14 @@ public class ResourceExceptionHandler {
     public ResponseEntity<StandartError> resourceNotFound(ResourceNotFundException e, HttpServletRequest request){
         String error = "Resource not found";
         HttpStatus status = HttpStatus.NOT_FOUND;
+        StandartError err = new StandartError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(DataBaseException.class)
+    public ResponseEntity<StandartError> dataBase(DataBaseException e, HttpServletRequest request){
+        String error = "DataBase Error";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         StandartError err = new StandartError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
