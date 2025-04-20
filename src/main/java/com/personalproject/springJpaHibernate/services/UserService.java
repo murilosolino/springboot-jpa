@@ -4,6 +4,7 @@ import com.personalproject.springJpaHibernate.entities.User;
 import com.personalproject.springJpaHibernate.repositories.UserRepository;
 import com.personalproject.springJpaHibernate.services.exceptions.DataBaseException;
 import com.personalproject.springJpaHibernate.services.exceptions.ResourceNotFundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -34,6 +35,10 @@ public class UserService{
 
     public void delete(Long id){
         try {
+            Optional<User> user = repository.findById(id);
+            if (user.isEmpty()){
+                throw new ResourceNotFundException(id);
+            }
             repository.deleteById(id);
         } catch (DataIntegrityViolationException e ){
             throw new DataBaseException(e.getMessage());
@@ -41,9 +46,13 @@ public class UserService{
     }
 
     public User update(Long id, User obj){
-        User entity = repository.getReferenceById(id);
-        updateData(entity, obj);
-        return repository.save(entity);
+        try{
+            User entity = repository.getReferenceById(id);
+            updateData(entity, obj);
+            return repository.save(entity);
+        }catch (EntityNotFoundException e){
+            throw new ResourceNotFundException(id);
+        }
     }
 
     private void updateData(User entity, User obj) {
