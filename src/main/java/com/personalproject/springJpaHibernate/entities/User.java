@@ -35,6 +35,10 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    public User(Long id) {
+        Id = id;
+    }
+
     public Long getId() {
         return Id;
     }
