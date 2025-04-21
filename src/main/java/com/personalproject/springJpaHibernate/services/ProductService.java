@@ -4,6 +4,7 @@ import com.personalproject.springJpaHibernate.entities.Product;
 import com.personalproject.springJpaHibernate.entities.User;
 import com.personalproject.springJpaHibernate.repositories.ProductRepository;
 import com.personalproject.springJpaHibernate.services.exceptions.DataBaseException;
+import com.personalproject.springJpaHibernate.services.exceptions.NullDataObjectException;
 import com.personalproject.springJpaHibernate.services.exceptions.ResourceNotFundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ public class ProductService {
     }
 
     public Product insert(Product obj){
+        validateDataObject(obj);
         return productRepository.save(obj);
     }
 
@@ -49,6 +51,7 @@ public class ProductService {
         try{
             Product entity = productRepository.getReferenceById(id);
             updateData(entity, obj);
+            validateDataObject(entity);
             return productRepository.save(entity);
         }catch (EntityNotFoundException e){
             throw new ResourceNotFundException(id);
@@ -60,6 +63,18 @@ public class ProductService {
         entity.setDescription(obj.getDescription());
         entity.setImgUrl(obj.getImgUrl());
         entity.setPrice(obj.getPrice());
+    }
+
+    private void validateDataObject(Product product){
+        if (product.getName() == null) {
+            throw new NullDataObjectException("NAME CANNOT BE NULL");
+        } else if (product.getDescription() == null){
+            throw new NullDataObjectException("DESCRIPTION CANNOT BE NULL");
+        } else if (product.getImgUrl() == null) {
+            throw new NullDataObjectException("imgURL CANNOT BE NULL");
+        } else if (product.getPrice() == null){
+            throw new NullDataObjectException("PRICE CANNOT BE NULL");
+        }
     }
 
 }
