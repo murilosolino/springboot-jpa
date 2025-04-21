@@ -58,15 +58,17 @@ public class OrderService {
 
     private void updateData(Order entity, Order obj) {
         entity.setOrderStatus(obj.getOrderStatus());
+        entity.setMoment(obj.getMoment());
+        entity.setClient(obj.getClient());
     }
 
     private void validateDataObject(Order order){
         if (order.getMoment() == null) {
             throw new NullDataObjectException("MOMENT CANNOT BE NULL");
         } else if (order.getClient() == null){
-            throw new NullDataObjectException("DESCRIPTION CANNOT BE NULL");
+            throw new NullDataObjectException("CLIENT CANNOT BE NULL");
         } else if (order.getOrderStatus() == null) {
-            throw new NullDataObjectException("imgURL CANNOT BE NULL");
+            throw new NullDataObjectException("ORDER STATUS CANNOT BE NULL");
         }
     }
 }

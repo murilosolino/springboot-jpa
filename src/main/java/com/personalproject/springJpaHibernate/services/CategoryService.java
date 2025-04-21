@@ -3,6 +3,7 @@ package com.personalproject.springJpaHibernate.services;
 import com.personalproject.springJpaHibernate.entities.Category;
 import com.personalproject.springJpaHibernate.repositories.CategoryRepository;
 import com.personalproject.springJpaHibernate.services.exceptions.DataBaseException;
+import com.personalproject.springJpaHibernate.services.exceptions.NullDataObjectException;
 import com.personalproject.springJpaHibernate.services.exceptions.ResourceNotFundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ public class CategoryService {
     }
 
     public Category insert(Category obj){
+        validateDataObject(obj);
         return categoryRepository.save(obj);
     }
 
@@ -47,6 +49,7 @@ public class CategoryService {
         try {
             Category entity = categoryRepository.getReferenceById(id);
             updateData(entity, obj);
+            validateDataObject(entity);
             return categoryRepository.save(entity);
         } catch (EntityNotFoundException e){
             throw new ResourceNotFundException(id);
@@ -55,6 +58,12 @@ public class CategoryService {
 
     private void updateData(Category entity, Category obj) {
         entity.setName(obj.getName());
+    }
+
+    private void validateDataObject(Category category){
+        if (category.getName() == null) {
+            throw new NullDataObjectException("NAME CANNOT BE NULL");
+        }
     }
 
 }
