@@ -1,5 +1,6 @@
 package com.personalproject.springJpaHibernate.services;
 
+import com.personalproject.springJpaHibernate.entities.Category;
 import com.personalproject.springJpaHibernate.entities.Product;
 import com.personalproject.springJpaHibernate.entities.User;
 import com.personalproject.springJpaHibernate.repositories.ProductRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ProductService {
@@ -56,6 +58,18 @@ public class ProductService {
         }catch (EntityNotFoundException e){
             throw new ResourceNotFundException(id);
         }
+    }
+
+    public void addCategory(Category category, Long id){
+        Product p = productRepository.getReferenceById(id);
+        p.getCategories().add(category);
+        productRepository.save(p);
+    }
+
+    public void deleteCategories(Long id, Category categorie) {
+        Product product = productRepository.getReferenceById(id);
+        product.getCategories().remove(categorie);
+        productRepository.save(product);
     }
 
     private void updateData(Product entity, Product obj) {

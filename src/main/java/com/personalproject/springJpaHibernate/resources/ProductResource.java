@@ -1,5 +1,6 @@
 package com.personalproject.springJpaHibernate.resources;
 
+import com.personalproject.springJpaHibernate.entities.Category;
 import com.personalproject.springJpaHibernate.entities.Product;
 import com.personalproject.springJpaHibernate.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,19 @@ public class ProductResource {
     public ResponseEntity<Product> update(@PathVariable Long Id, @RequestBody Product obj){
         obj = productService.update(Id,obj);
         return ResponseEntity.ok().body(obj);
+    }
+
+    @RequestMapping(value = "/{id}/categories")
+    @PostMapping
+    public ResponseEntity<Void> addCategory(@RequestBody Category category, @PathVariable Long id){
+        productService.addCategory(category,id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping(value = "/{id}/categories")
+    public ResponseEntity<Void> deleteCategories(@PathVariable Long id, @RequestBody Category categorie) {
+        productService.deleteCategories(id, categorie);
+        return ResponseEntity.noContent().build();
     }
 
 }
