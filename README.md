@@ -76,6 +76,13 @@ Todos os controllers estão no pacote `com.personalproject.springJpaHibernate.re
 | DELETE      | `/orders/{id}`     | Remove um pedido                         |
 | ...         | ...                | Endpoints semelhantes para **products**, **categories**, **order items**, **payments** |
 
+| Método HTTP | URI                | Descrição                                |
+|-------------|--------------------|------------------------------------------|
+| POST        | `/products/{id}/categories`| Adiciona uma categoria para o produto|
+| DELETE      | `/products/{id}/categories`| Remove a categoria do produto    |
+| POST        | `orders/{id}/items` | Adiciona um order item a uma order      |
+
+
 ## Dados de exemplo (perfil `test`)
 
 Quando o perfil `test` está ativo, o `TestConfig` popula o H2 com:
