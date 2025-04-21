@@ -1,6 +1,7 @@
 package com.personalproject.springJpaHibernate.resources;
 
 import com.personalproject.springJpaHibernate.entities.Order;
+import com.personalproject.springJpaHibernate.entities.OrderItem;
 import com.personalproject.springJpaHibernate.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -49,5 +50,11 @@ public class OrderResource {
         return ResponseEntity.ok().body(obj);
     }
 
+    @RequestMapping(value = "{id}/items")
+    @PostMapping
+    public ResponseEntity<Void> addOrderItem(@PathVariable Long id, @RequestBody OrderItem item){
+        orderService.addOrderItem(id,item);
+        return ResponseEntity.ok().build();
+    }
 
 }

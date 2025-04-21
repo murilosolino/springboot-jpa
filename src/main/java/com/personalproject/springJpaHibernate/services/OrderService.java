@@ -1,7 +1,12 @@
 package com.personalproject.springJpaHibernate.services;
 
 import com.personalproject.springJpaHibernate.entities.Order;
+import com.personalproject.springJpaHibernate.entities.OrderItem;
+import com.personalproject.springJpaHibernate.entities.Product;
+import com.personalproject.springJpaHibernate.entities.pk.OrderItemPk;
+import com.personalproject.springJpaHibernate.repositories.OrderItemRepository;
 import com.personalproject.springJpaHibernate.repositories.OrderRepository;
+import com.personalproject.springJpaHibernate.repositories.ProductRepository;
 import com.personalproject.springJpaHibernate.services.exceptions.DataBaseException;
 import com.personalproject.springJpaHibernate.services.exceptions.NullDataObjectException;
 import com.personalproject.springJpaHibernate.services.exceptions.ResourceNotFundException;
@@ -18,6 +23,12 @@ public class OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     public List<Order> findAll(){
         return orderRepository.findAll();
@@ -54,6 +65,23 @@ public class OrderService {
         } catch (EntityNotFoundException e){
             throw new ResourceNotFundException(id);
         }
+    }
+
+    public void addOrderItem(Long orderId, OrderItem orderItem) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFundException("Order not found: " + orderId));
+
+        Product product = productRepository.findById(orderItem.getProduct().getId())
+                .orElseThrow(() -> new ResourceNotFundException("Product not found: " + orderItem.getProduct().getId()));
+
+        orderItem.setOrder(order);
+        orderItem.setPrice(product.getPrice());
+
+        orderItemRepository.save(orderItem);
+
+        order.getItems().add(orderItem);
+
+        orderRepository.save(order);
     }
 
     private void updateData(Order entity, Order obj) {

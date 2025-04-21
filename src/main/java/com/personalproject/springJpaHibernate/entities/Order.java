@@ -44,6 +44,9 @@ public class Order implements Serializable {
         setOrderStatus(orderStatus);
     }
 
+    public Order(Long orderId, Object o, Object o1) {
+    }
+
     public User getClient() {
         return client;
     }
@@ -110,4 +113,5 @@ public class Order implements Serializable {
         }
         return total;
     }
+
 }
